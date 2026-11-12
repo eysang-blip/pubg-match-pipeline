@@ -1,3 +1,8 @@
 .env
 *.db
 data/
+output/
+logs/
+expired_ids.txt
+match_ids_old.txt
+__pycache__/
