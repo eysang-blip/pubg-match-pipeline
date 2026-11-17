@@ -8,10 +8,14 @@ PUBG 공식 API로 매치 데이터를 수집해 SQLite DB로 정리하고, 데�
 
 ## 파이프라인 구성
 
-```
-get_samples.py ─▶ collect_matches.py ─▶ build_db.py ─▶ validate.py ─▶ analyze_sql.py
- 매치 ID 목록      매치 상세 JSON         SQLite DB      품질 점검 9개     sql/*.sql 실행
- (누적 저장)       (증분·재시도)          (원본으로 재생성)  실패 시 중단      검토 후보 CSV
+```mermaid
+flowchart LR
+    A["get_samples.py<br/>매치 ID 목록<br/>(누적 저장)"] --> B["collect_matches.py<br/>매치 상세 JSON<br/>(증분 수집, 429 재시도)"]
+    B --> C["build_db.py<br/>SQLite DB<br/>(원본으로 매번 재생성)"]
+    C --> D{"validate.py<br/>품질 점검 9개"}
+    D -- 통과 --> E["analyze_sql.py<br/>sql/01~06 실행"]
+    D -- 실패 --> F["중단<br/>logs/에 기록"]
+    E --> G["검토 후보 CSV<br/>(저장소 비공개)"]
 ```
 
 | 단계 | 스크립트 | 하는 일 |
