@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # 데이터 품질 자동 점검
-# - 기존 check_*.py에서 눈으로 확인하던 항목을 "통과/실패"로 판정한다
+# - 기존 exploration/check_*.py에서 눈으로 확인하던 항목을 "통과/실패"로 판정한다
 # - 결과는 화면과 logs/validation_날짜.log에 남기고, 실패가 있으면 종료 코드 1을 돌려준다
 #   (파이프라인이 실패한 데이터로 분석까지 넘어가지 않게 하기 위해)
 

@@ -24,7 +24,20 @@ get_samples.py ─▶ collect_matches.py ─▶ build_db.py ─▶ validate.py �
 | 전체 실행 | `run_pipeline.py` | 1~5단계를 순서대로 실행, 단계별 결과를 `logs/pipeline_날짜.log`에 기록 |
 | 테스트 | `test_validate.py` | 점검 로직이 일부러 넣은 오류(누락, 중복, 논리 오류 등)를 잡아내는지 확인 (7개) |
 
-초기 탐색 단계에서 쓴 스크립트(`get_match.py`, `check_*.py`, `analyze_outliers*.py`)는 과정 기록용으로 남겨 두었습니다.
+### 폴더 구조
+
+```
+├── run_pipeline.py            전체 실행
+├── get_samples.py ~ analyze_sql.py   파이프라인 단계 (위 표)
+├── test_validate.py           품질 점검 테스트
+├── run_sql.py                 SQL 파일 하나 실행 (verify/ 용)
+├── sql/                       분석 쿼리 01~06
+├── verify/                    AI 결과 직접 재현 쿼리 01~03
+├── docs/                      오버워치 확장 문서, 작업 메모(NOTES.md)
+└── exploration/               1차 탐색 스크립트 (과정 기록용)
+```
+
+`exploration/`에는 1차 작업 때 쓴 스크립트(매치 구조 확인 `get_match.py`, 플레이어 조회 `get_player.py`, 품질 점검 `check_*.py`, IQR 이상치 분석 `analyze_outliers*.py`)를 과정 기록용으로 남겨 두었습니다. 지금 파이프라인에서는 쓰지 않으며, 프로젝트 폴더에서 `python exploration/check_rosters.py`처럼 실행합니다.
 
 ## DB 스키마
 
@@ -75,7 +88,7 @@ participants  (match_id, player_id, is_bot, kills, assists, dbnos, headshot_kill
 
 ### 1차 시도와 문제점
 
-처음에는 squad 모드 피해량에 IQR 3배 기준을 적용했습니다(`analyze_outliers*.py`, 매치 50개 기준). 걸린 사람은 대부분 오래 살아남아 1위를 한 플레이어였습니다(순위 중앙값 1위, 생존 20.2분). 피해량이 높은 이유의 상당 부분이 생존 시간이었고, 봇도 섞여 있었습니다.
+처음에는 squad 모드 피해량에 IQR 3배 기준을 적용했습니다(`exploration/analyze_outliers*.py`, 매치 50개 기준). 걸린 사람은 대부분 오래 살아남아 1위를 한 플레이어였습니다(순위 중앙값 1위, 생존 20.2분). 피해량이 높은 이유의 상당 부분이 생존 시간이었고, 봇도 섞여 있었습니다.
 
 ### 지표 설계
 
